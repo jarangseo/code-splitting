@@ -5,6 +5,8 @@ import Page1 from './components/Page1';
 // import Page2 from './components/Page2';
 // import Page3 from './components/Page3';
 
+import asyncComponent from './components/AsyncComponent';
+
 class App extends Component {
     constructor() {
         super();
@@ -14,17 +16,18 @@ class App extends Component {
         };
     }
     onRouteChange = (route) => {
-        if (route === 'page1') {
-            this.setState({ route: route });
-        } else if (route === 'page2') {
-            import('./components/Page2').then((Page2) => {
-                this.setState({ route: route, component: Page2.default });
-            });
-        } else if (route === 'page3') {
-            import('./components/Page3').then((Page3) => {
-                this.setState({ route: route, component: Page3.default });
-            });
-        }
+        // if (route === 'page1') {
+        //     this.setState({ route: route });
+        // } else if (route === 'page2') {
+        //     import('./components/Page2').then((Page2) => {
+        //         this.setState({ route: route, component: Page2.default });
+        //     });
+        // } else if (route === 'page3') {
+        //     import('./components/Page3').then((Page3) => {
+        //         this.setState({ route: route, component: Page3.default });
+        //     });
+        // }
+        this.setState({ route: route });
     };
 
     render() {
@@ -35,8 +38,15 @@ class App extends Component {
             // } else {
             //     return <Page3 onRouteChange={this.onRouteChange} />;
             // }
+            // } else {
+            //     return <this.state.component onRouteChange={this.onRouteChange} />;
+            // }
+        } else if (this.state.route === 'page2') {
+            const Page2 = asyncComponent(() => import('./components/Page2'));
+            return <Page2 onRouteChange={this.onRouteChange} />;
         } else {
-            return <this.state.component onRouteChange={this.onRouteChange} />;
+            const Page3 = asyncComponent(() => import('./components/Page3'));
+            return <Page3 onRouteChange={this.onRouteChange} />;
         }
     }
 }
